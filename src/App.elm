@@ -49,24 +49,46 @@ subscriptions model =
 type Msg
   = DrawQuestion
   | GotQuestion (Maybe Question)
+  | GotAnswer (Maybe Answer)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update action model =
   case action of
     DrawQuestion ->
-      (model, Random.generate GotQuestion questionGenerator)
+      (model, Random.generate GotQuestion randomQuestion)
 
-    GotQuestion (Nothing) ->
-      (model, Random.generate GotQuestion questionGenerator)
+    GotQuestion Nothing ->
+      ( model
+      , Random.generate GotQuestion randomQuestion
+      )
 
-    GotQuestion (Just question) ->
-      ( { model | question = question }
-      , Cmd.none
+    GotQuestion (Just (StraightQuestion question)) ->
+      ( { model | question = StraightQuestion question }
+      , Cmd.none -- TODO
+      )
+
+    GotQuestion (Just (CheekyQuestion question)) ->
+      ( { model | question = CheekyQuestion question }
+      , Random.generate GotAnswer randomStraightAnswer
       )
 
 
-questionGenerator =
+    GotAnswer (Just answer) ->
+      ( { model | answer = answer }
+      , Cmd.none
+      )
+
+    GotAnswer Nothing ->
+      ( model
+      , Random.generate GotQuestion randomQuestion
+      )
+
+
+randomQuestion =
   Random.Array.sample questions
+
+randomStraightAnswer =
+  Random.Array.sample straightAnswers
 
 
 questionString : Question -> String
@@ -259,4 +281,93 @@ questions =
     , StraightQuestion "It's just a hack to make _____ run"
     , StraightQuestion "It's been 91 days since _____ was updated"
     , StraightQuestion "_____ is Turing complete"
+    ]
+
+straightAnswers =
+  Array.fromList
+    [ StraightAnswer "a MEAN developer stack"
+    , StraightAnswer "'413: Entity Too Large' Errors"
+    , StraightAnswer "Removing PHP from the development stack"
+    , StraightAnswer "Flash"
+    , StraightAnswer "Slower broadband speeds"
+    , StraightAnswer "Faster upload time"
+    , StraightAnswer "Code optimisation"
+    , StraightAnswer "Refactoring"
+    , StraightAnswer "a trendy young startup"
+    , StraightAnswer "The Cult of Mac"
+    , StraightAnswer "The fucking JVM"
+    , StraightAnswer "Morning Standups"
+    , StraightAnswer "The <body> tag"
+    , StraightAnswer "Munging"
+    , StraightAnswer "That goddam paperclip"
+    , StraightAnswer "The smell of the guy from sysadmin"
+    , StraightAnswer "syntactic sugar"
+    , StraightAnswer "Sudo rm-rf /"
+    , StraightAnswer "Inappropriately contracted variable names"
+    , StraightAnswer "Spaces not tabs"
+    , StraightAnswer "Stackoverflow is down??!!!!"
+    , StraightAnswer "Ruby"
+    , StraightAnswer "Sinatra"
+    , StraightAnswer "-- What does this even do?"
+    , StraightAnswer "Slackware"
+    , StraightAnswer "Rack"
+    , StraightAnswer "Short Stroking"
+    , StraightAnswer "Someone not reading fucking manual"
+    , StraightAnswer "Replacing all dev's machines with Raspberry Pis"
+    , StraightAnswer "Regular Expressions"
+    , StraightAnswer "Rebasing Master"
+    , StraightAnswer "Git Force"
+    , StraightAnswer "Git Push"
+    , StraightAnswer "Pull requests"
+    , StraightAnswer "Re-writing deployment scripts at 2 AM"
+    , StraightAnswer "Read-only Fridays"
+    , StraightAnswer "Programming while drunk"
+    , StraightAnswer "Profanity in the git log"
+    , StraightAnswer "Production"
+    , StraightAnswer "PHP"
+    , StraightAnswer "Patch Tuesday"
+    , StraightAnswer "Linters"
+    , StraightAnswer "Minimum Viable Product"
+    , StraightAnswer "NPM"
+    , StraightAnswer "Node"
+    , StraightAnswer "Multiple measurement systems"
+    , StraightAnswer "Mutation of immutable data"
+    , StraightAnswer "Neckbeards"
+    , StraightAnswer "Monads"
+    , StraightAnswer "Women In Tech"
+    , StraightAnswer "Merge Conflicts"
+    , StraightAnswer "Filter-Map-Reduce"
+    , StraightAnswer "Deleting more lines than you add"
+    , StraightAnswer "a shared root password"
+    , StraightAnswer "Mac OSX"
+    , StraightAnswer "The ship-it squirrel"
+    , StraightAnswer "Little Bobby Tables"
+    , StraightAnswer "Legacy Code"
+    , StraightAnswer "Linus Torvalds"
+    , StraightAnswer "Kill -9"
+    , StraightAnswer "Kernal panic"
+    , StraightAnswer "Internet Explorer compatability hacks"
+    , StraightAnswer "Infinite loops"
+    , StraightAnswer "Github Issues"
+    , StraightAnswer "Haskell"
+    , StraightAnswer "Hate driven development"
+    , StraightAnswer "The Mainframe"
+    , StraightAnswer "Server Hum"
+    , StraightAnswer "Cowsay Moo"
+    , StraightAnswer "CEOs with root access"
+    , StraightAnswer "command line options"
+    , StraightAnswer "Commenting every line of code"
+    , StraightAnswer "Committing from the bar."
+    , StraightAnswer "Elm"
+    , StraightAnswer "Continuous testing"
+    , StraightAnswer "The Blue Screen of Death"
+    , StraightAnswer "Tail recursion"
+    , StraightAnswer "Object permanence."
+    , StraightAnswer "recruiters"
+    , StraightAnswer "Python"
+    , StraightAnswer "the Bourne Again Shell"
+    , StraightAnswer "The Apple start-up sound"
+    , StraightAnswer "Windows NT"
+    , StraightAnswer "Internet Explorer"
+    , StraightAnswer "Elixir"
     ]
