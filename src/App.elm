@@ -1,5 +1,6 @@
 import Html exposing (..)
 import Html.Attributes exposing (class)
+import Html.Events exposing (onClick)
 import Html.App
 import Random.Array
 import Random
@@ -96,7 +97,16 @@ questions =
 
 view model = div []
   [ h1 [] [ text "Elm Against Humanity" ]
-  , div [class "question-card"] [ text (questionString model.question) ]
-  , div [class "answer-card"] [ text (answerString model.answer) ]
+
+  , div
+      [ class "question-card"
+      , onClick DrawQuestion
+      ]
+      [ text (questionString model.question) ]
+
+  , div
+      [ class "answer-card"
+      ]
+      [ text (answerString model.answer) ]
   ]
 
