@@ -1,0 +1,17 @@
+{
+  "name": "proverbicam",
+  "version": "1.0.0",
+  "description": "Imitation is a virtue ",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EJLarcs/proverbicam.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EJLarcs/proverbicam/issues"
+  },
+  "homepage": "https://github.com/EJLarcs/proverbicam#readme",
+  "dependencies": {
+    "elm": "^0.17.0"
+  }
+}
