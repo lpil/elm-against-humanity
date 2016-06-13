@@ -1,6 +1,9 @@
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.App
+import Random.Array
+import Random
+import Array
 
 main =
   Html.App.program
@@ -43,23 +46,27 @@ subscriptions model =
 -- Update
 
 type Msg
-  = GetAnother
+  = DrawQuestion
+  | GotQuestion (Maybe Question)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update action model =
-  ( model
-  , Cmd.none
-  )
+  case action of
+    DrawQuestion ->
+      (model, Random.generate GotQuestion questionGenerator)
+
+    GotQuestion (Nothing) ->
+      (model, Random.generate GotQuestion questionGenerator)
+
+    GotQuestion (Just question) ->
+      ( { model | question = question }
+      , Cmd.none
+      )
 
 
--- view
 
-view model = div []
-  [ h1 [] [ text "Elm Against Humanity" ]
-  , div [class "question-card"] [ text (questionString model.question) ]
-  , div [class "answer-card"] [ text (answerString model.answer) ]
-  ]
-
+questionGenerator =
+  Random.Array.sample questions
 
 questionString : Question -> String
 questionString question =
@@ -77,3 +84,19 @@ answerString answer =
       string
     StraightAnswer string ->
       string
+
+
+questions =
+  Array.fromList
+    [ CheekyQuestion "SQ1"
+    , StraightQuestion "SQ2"
+    ]
+
+-- view
+
+view model = div []
+  [ h1 [] [ text "Elm Against Humanity" ]
+  , div [class "question-card"] [ text (questionString model.question) ]
+  , div [class "answer-card"] [ text (answerString model.answer) ]
+  ]
+
